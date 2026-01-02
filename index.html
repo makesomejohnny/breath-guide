@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta name="google-site-verification" content="TR8OxtfrZ4C85uZdT12t7aRYjkaJpFrukCaWB83UxeQ" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BREATH GUIDE | 集中・リラックスのための呼吸法ガイド</title>
-    <meta name="description" content="ピンクノイズとアニメーションでガイドする呼吸法アプリ。4-7-8呼吸法、ボックス呼吸、リラックス呼吸を、腹式呼吸のアドバイスと共に実践できます。">
-    <meta name="keywords" content="呼吸法, 4-7-8呼吸, ボックス呼吸, マインドフルネス, 集中力, リラックス, ピンクノイズ, 腹式呼吸">
-
+    <meta name="description" content="ピンクノイズとアニメーションでガイドする呼吸法アプリ。4-7-8呼吸法、ボックス呼吸、リラックス呼吸を実践。">
     <style>
         :root {
             --bg-color: #1a1a2e;
@@ -16,7 +13,6 @@
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
         }
-
         body {
             margin: 0;
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -27,48 +23,21 @@
             color: white;
             transition: background 2s ease;
             overflow-x: hidden;
-            /* 背景を画面に固定し、繰り返さない設定 */
             background-attachment: fixed;
             background-size: cover;
         }
-
         /* 時間帯別背景 */
-        /* 時間帯別背景：より落ち着いたトーンへ */
-        body.day {
-            /* 爽やかで透明感のある朝のスカイブルー */
-            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-        }
-
-        body.evening {
-            /* 穏やかで幻想的な夕暮れ（トワイライト） */
-            background: linear-gradient(135deg, #485563 0%, #e6a87a 100%);
-        }
-
-        body.night {
-            /* 深い静寂を感じる濃紺とミッドナイトブルー */
-            background: linear-gradient(135deg, #09203f 0%, #537895 100%);
-        }
-
-        /* 背景をより美しく見せるための追加設定 */
-        body {
-            /* ...既存の設定... */
-            background-attachment: fixed;
-            background-size: cover;
-            /* ガラスカードとの対比を出すために、少し暗めに落とすオーバーレイ */
-        }
+        body.day { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        body.evening { background: linear-gradient(135deg, #485563 0%, #e6a87a 100%); }
+        body.night { background: linear-gradient(135deg, #09203f 0%, #537895 100%); }
 
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.1);
-            /* ほんの少し暗くして高級感を出す */
             z-index: -1;
         }
-
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
@@ -81,28 +50,9 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             margin-top: 40px;
         }
-
-        h2 {
-            letter-spacing: 4px;
-            font-weight: 300;
-            margin-bottom: 25px;
-        }
-
-        .section-label {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            margin: 15px 0 8px;
-            text-align: left;
-            letter-spacing: 1px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            margin-bottom: 12px;
-        }
-
+        h2 { letter-spacing: 4px; font-weight: 300; margin-bottom: 25px; }
+        .section-label { font-size: 0.7rem; opacity: 0.7; margin: 15px 0 8px; text-align: left; letter-spacing: 1px; }
+        .button-group { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
         button {
             flex: 1;
             background: rgba(255, 255, 255, 0.1);
@@ -116,12 +66,7 @@
             transition: all 0.3s ease;
             white-space: nowrap;
         }
-
-        button.active {
-            background: rgba(255, 255, 255, 0.4);
-            border-color: #fff;
-        }
-
+        button.active { background: rgba(255, 255, 255, 0.4); border-color: #fff; }
         .circle-container {
             position: relative;
             width: 220px;
@@ -131,7 +76,6 @@
             justify-content: center;
             align-items: center;
         }
-
         #countdown-overlay {
             position: absolute;
             top: -45px;
@@ -143,7 +87,6 @@
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
             z-index: 10;
         }
-
         .breath-circle {
             width: 160px;
             height: 160px;
@@ -156,21 +99,9 @@
             will-change: transform;
             transition: transform 1s ease-in-out;
             backface-visibility: hidden;
-            /* チラつき防止 */
         }
-        }
-
-        .phase-label {
-            font-size: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
-
-        .timer {
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
+        .phase-label { font-size: 1.2rem; font-weight: 300; letter-spacing: 2px; }
+        .timer { font-size: 2.5rem; font-weight: bold; }
         #start-btn {
             width: 100%;
             background: white;
@@ -179,13 +110,9 @@
             padding: 15px;
             margin-top: 20px;
             border: none;
+            border-radius: 12px;
         }
-
-        #start-btn.stop-style {
-            background: #ff4b2b;
-            color: white;
-        }
-
+        #start-btn.stop-style { background: #ff4b2b; color: white; }
         .info-section {
             width: 90%;
             max-width: 400px;
@@ -195,13 +122,7 @@
             border-radius: 20px;
             text-align: left;
         }
-
-        #technique-box {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.2);
-        }
-
+        #technique-box { margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.2); }
         .tech-tag {
             display: inline-block;
             background: rgba(0, 242, 254, 0.2);
@@ -211,49 +132,29 @@
             color: var(--accent-color);
             margin-bottom: 8px;
         }
-
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0.5; }
         }
-
-        .pulse-animation {
-            animation: pulse 1s infinite ease-in-out;
-        }
+        .pulse-animation { animation: pulse 1s infinite ease-in-out; }
     </style>
 </head>
-
 <body>
-
     <div class="glass-card">
         <h2>BREATH GUIDE</h2>
-
         <div class="section-label">MODE</div>
         <div class="button-group" id="mode-group">
             <button id="focus-btn" onclick="selectMode('focus')">集中</button>
             <button id="base-btn" onclick="selectMode('base')">基本</button>
             <button id="relax-btn" onclick="selectMode('relax')">癒やし</button>
         </div>
-
         <div class="section-label">ROUNDS</div>
         <div class="button-group" id="round-group">
             <button id="r3" onclick="selectRounds(3)">3回</button>
             <button id="r5" onclick="selectRounds(5)">5回</button>
             <button id="r10" onclick="selectRounds(10)">10回</button>
         </div>
-
         <div class="circle-container">
             <div id="countdown-overlay" style="display:none;"></div>
             <div class="breath-circle" id="circle">
@@ -261,15 +162,12 @@
                 <div class="timer" id="time">0</div>
             </div>
         </div>
-
         <div id="loop-count" style="font-size: 0.9rem; opacity: 0.8;">残り：-- 回</div>
         <button id="start-btn" onclick="handleStart()">START</button>
     </div>
 
     <div class="info-section">
-        <div id="info-main">
-            <div id="info-text">モードを選択してください。</div>
-        </div>
+        <div id="info-main"><div id="info-text">モードを選択してください。</div></div>
         <div id="technique-box">
             <span class="tech-tag">TIPS: 腹式呼吸</span>
             <p id="technique-text" style="font-size: 0.8rem; opacity: 0.8; margin: 0; line-height: 1.5;"></p>
@@ -285,19 +183,11 @@
             const hour = new Date().getHours();
             const body = document.body;
             body.classList.remove('day', 'evening', 'night');
-
-            // クラスの付け替え
-            if (hour >= 6 && hour < 16) {
-                body.classList.add('day');
-            } else if (hour >= 16 && hour < 19) {
-                body.classList.add('evening');
-            } else {
-                body.classList.add('night');
-            }
-
-            // デバッグ用：今の時間をコンソールに出すと確認しやすくなります
-            console.log("Current Hour:", hour, "Applied Class:", body.className);
+            if (hour >= 6 && hour < 16) body.classList.add('day');
+            else if (hour >= 16 && hour < 19) body.classList.add('evening');
+            else body.classList.add('night');
         }
+
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
         function playBell(freq, vol = 0.1) {
@@ -312,39 +202,28 @@
 
         function createPinkNoiseBuffer() {
             const bufferSize = 2 * audioCtx.sampleRate, buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate), output = buffer.getChannelData(0);
-            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-            for (let i = 0; i < bufferSize; i++) {
-                const white = Math.random() * 2 - 1;
-                b0 = 0.99886 * b0 + white * 0.0555179; b1 = 0.99332 * b1 + white * 0.0750759; b2 = 0.96900 * b2 + white * 0.1538520;
-                b3 = 0.86650 * b3 + white * 0.3104856; b4 = 0.55000 * b4 + white * 0.5329522; b5 = -0.7616 * b5 - white * 0.0168980;
-                output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11; b6 = white * 0.115926;
+            let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+            for(let i=0; i<bufferSize; i++){
+                const white=Math.random()*2-1;
+                b0=0.99886*b0+white*0.0555179; b1=0.99332*b1+white*0.0750759; b2=0.96900*b2+white*0.1538520;
+                b3=0.86650*b3+white*0.3104856; b4=0.55000*b4+white*0.5329522; b5=-0.7616*b5-white*0.0168980;
+                output[i]=(b0+b1+b2+b3+b4+b5+b6+white*0.5362)*0.11; b6=white*0.115926;
             }
             return buffer;
         }
 
         function startBreathSound(isHigh, duration) {
-            initAudio();
-            stopBreathSound();
+            initAudio(); stopBreathSound();
             breathNode = audioCtx.createBufferSource();
-            breathNode.buffer = createPinkNoiseBuffer();
-            breathNode.loop = true;
-
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.value = isHigh ? 1000 : 500; // 吸うときは高め、吐くときは低め
-
-            gainNode = audioCtx.createGain();
-            const now = audioCtx.currentTime;
-
+            breathNode.buffer = createPinkNoiseBuffer(); breathNode.loop = true;
+            const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass';
+            filter.frequency.value = isHigh ? 1000 : 500;
+            gainNode = audioCtx.createGain(); const now = audioCtx.currentTime;
             gainNode.gain.setValueAtTime(0, now);
-            // duration（秒数）いっぱいまで鳴るように調整
             gainNode.gain.linearRampToValueAtTime(0.2, now + 0.5);
             gainNode.gain.linearRampToValueAtTime(0, now + duration - 0.1);
-
-            breathNode.connect(filter);
-            filter.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            breathNode.start();
+            breathNode.connect(filter); filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination); breathNode.start();
         }
 
         function stopBreathSound() { if (breathNode) { try { const now = audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.linearRampToValueAtTime(0, now + 0.2); breathNode.stop(now + 0.3); } catch (e) { } breathNode = null; } }
@@ -358,15 +237,8 @@
         function selectMode(key) {
             if (isRunning) return;
             selectedData = configs[key];
-
-            // mode-groupの中にあるボタン「だけ」のactiveを消す
-            const modeButtons = document.querySelectorAll('#mode-group button');
-            modeButtons.forEach(btn => btn.classList.remove('active'));
-
-            // 選択されたボタンにactiveをつける
-            const targetBtn = document.getElementById(key + '-btn');
-            if (targetBtn) targetBtn.classList.add('active');
-
+            document.querySelectorAll('#mode-group button').forEach(b => b.classList.remove('active'));
+            const target = document.getElementById(key + '-btn'); if (target) target.classList.add('active');
             document.getElementById('info-text').innerHTML = selectedData.desc;
             document.getElementById('technique-text').innerText = selectedData.tip;
             playBell(523, 0.05);
@@ -375,15 +247,8 @@
         function selectRounds(n) {
             if (isRunning) return;
             remainingLoops = n;
-
-            // round-groupの中にあるボタン「だけ」のactiveを消す
-            const roundButtons = document.querySelectorAll('#round-group button');
-            roundButtons.forEach(btn => btn.classList.remove('active'));
-
-            // 選択されたボタンにactiveをつける
-            const targetBtn = document.getElementById('r' + n);
-            if (targetBtn) targetBtn.classList.add('active');
-
+            document.querySelectorAll('#round-group button').forEach(b => b.classList.remove('active'));
+            const target = document.getElementById('r' + n); if (target) target.classList.add('active');
             document.getElementById('loop-count').innerText = `残り：${remainingLoops} 回`;
             playBell(659, 0.05);
         }
@@ -392,12 +257,13 @@
             if (currentTimer) clearInterval(currentTimer);
             if (countdownInterval) clearInterval(countdownInterval);
             stopBreathSound(); isRunning = false;
-            const btn = document.getElementById('start-btn');
-            btn.innerText = "START"; btn.classList.remove('stop-style');
+            document.getElementById('start-btn').innerText = "START";
+            document.getElementById('start-btn').classList.remove('stop-style');
             document.getElementById('phase').innerText = "READY"; document.getElementById('time').innerText = "0";
             document.getElementById('time').style.opacity = "1";
             const circle = document.getElementById('circle');
-            circle.style.transition = "transform 0.5s ease"; circle.style.transform = "scale(1)"; circle.classList.remove('pulse-animation');
+            circle.style.transition = "transform 0.5s ease"; circle.style.transform = "scale(1)";
+            circle.classList.remove('pulse-animation');
             document.getElementById('countdown-overlay').style.display = "none";
         }
 
@@ -405,23 +271,20 @@
             if (isRunning) { resetSystem(); return; }
             if (!selectedData) { alert("モードを選択してください"); return; }
             initAudio(); isRunning = true;
-            const btn = document.getElementById('start-btn');
-            btn.innerText = "STOP"; btn.classList.add('stop-style');
-
+            document.getElementById('start-btn').innerText = "STOP";
+            document.getElementById('start-btn').classList.add('stop-style');
             let count = 3;
             const overlay = document.getElementById('countdown-overlay');
-            const timeText = document.getElementById('time');
             overlay.style.display = "block"; overlay.innerText = count;
-            timeText.style.opacity = "0.2";
+            document.getElementById('time').style.opacity = "0.2";
             document.getElementById('phase').innerText = "PREPARE";
             document.getElementById('circle').classList.add('pulse-animation');
-
             countdownInterval = setInterval(() => {
                 count--;
                 if (count > 0) overlay.innerText = count;
                 else {
                     clearInterval(countdownInterval); overlay.style.display = "none";
-                    timeText.style.opacity = "1";
+                    document.getElementById('time').style.opacity = "1";
                     document.getElementById('circle').classList.remove('pulse-animation');
                     startSession();
                 }
@@ -431,62 +294,45 @@
         function startSession() {
             let phaseIdx = 0; let currentPhase = selectedData.phases[phaseIdx]; let timeLeft = selectedData.times[currentPhase];
             const circle = document.getElementById('circle');
+            
             const updateUI = (phase, time) => {
                 document.getElementById('time').innerText = time;
                 document.getElementById('phase').innerText = (phase === 'inhale') ? "吸って" : (phase.startsWith('hold') ? "止めて" : "吐いて");
-
-                const updateUI = (phase, time) => {
-                    document.getElementById('time').innerText = time;
-                    document.getElementById('phase').innerText = (phase === 'inhale') ? "吸って" : (phase.startsWith('hold') ? "止めて" : "吐いて");
-
-                    // 各フェーズの「開始1秒目」に音と動きをセットする
-                    if (time === selectedData.times[phase]) {
-                        if (phase === 'inhale') {
-                            // 吸う：円を大きく、高い音を出す
-                            circle.style.transition = "none";
-                            circle.style.transform = "scale(1)";
-                            requestAnimationFrame(() => {
-                                requestAnimationFrame(() => {
-                                    circle.style.transition = `transform ${selectedData.times[phase]}s ease-in-out`;
-                                    circle.style.transform = "scale(1.2)";
-                                });
-                            });
-                            playBell(880, 0.05);
-                            startBreathSound(true, selectedData.times[phase]); // 高いピンクノイズ
-                        }
-                        else if (phase.startsWith('hold')) {
-                            // 止める：音を消す、円の動きを止める
-                            stopBreathSound();
-                            playBell(440, 0.03);
-                            circle.style.transition = "none";
-                        }
-                        else if (phase === 'exhale') {
-                            // 吐く：円を小さく、低い音を出す
+                if (time === selectedData.times[phase]) {
+                    if (phase === 'inhale') {
+                        circle.style.transition = "none"; circle.style.transform = "scale(1)";
+                        requestAnimationFrame(() => { requestAnimationFrame(() => {
                             circle.style.transition = `transform ${selectedData.times[phase]}s ease-in-out`;
-                            circle.style.transform = "scale(1.0)";
-                            playBell(660, 0.05);
-                            startBreathSound(false, selectedData.times[phase]); // 低いピンクノイズ（ここが復活！）
-                        }
+                            circle.style.transform = "scale(1.2)";
+                        }); });
+                        playBell(880, 0.05); startBreathSound(true, selectedData.times[phase]);
+                    } else if (phase.startsWith('hold')) {
+                        stopBreathSound(); playBell(440, 0.03); circle.style.transition = "none";
+                    } else if (phase === 'exhale') {
+                        circle.style.transition = `transform ${selectedData.times[phase]}s ease-in-out`;
+                        circle.style.transform = "scale(1.0)";
+                        playBell(660, 0.05); startBreathSound(false, selectedData.times[phase]);
                     }
-                };
-                updateUI(currentPhase, timeLeft);
-                currentTimer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        phaseIdx++;
-                        if (phaseIdx >= selectedData.phases.length) {
-                            remainingLoops--; document.getElementById('loop-count').innerText = `残り：${remainingLoops} 回`;
-                            if (remainingLoops <= 0) { playBell(1046, 0.1); resetSystem(); document.getElementById('phase').innerText = "完了"; return; }
-                            phaseIdx = 0;
-                        }
-                        currentPhase = selectedData.phases[phaseIdx]; timeLeft = selectedData.times[currentPhase];
-                    }
-                    updateUI(currentPhase, timeLeft);
-                }, 1000);
-            }
+                }
+            };
 
-            window.addEventListener('load', () => { updateBackground(); selectMode('base'); selectRounds(5); });
+            updateUI(currentPhase, timeLeft);
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    phaseIdx++;
+                    if (phaseIdx >= selectedData.phases.length) {
+                        remainingLoops--; document.getElementById('loop-count').innerText = `残り：${remainingLoops} 回`;
+                        if (remainingLoops <= 0) { playBell(1046, 0.1); resetSystem(); document.getElementById('phase').innerText = "完了"; return; }
+                        phaseIdx = 0;
+                    }
+                    currentPhase = selectedData.phases[phaseIdx]; timeLeft = selectedData.times[currentPhase];
+                }
+                updateUI(currentPhase, timeLeft);
+            }, 1000);
+        }
+
+        window.addEventListener('load', () => { updateBackground(); selectMode('base'); selectRounds(5); });
     </script>
 </body>
-
 </html>
