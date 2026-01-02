@@ -33,16 +33,40 @@
         }
 
         /* 時間帯別背景 */
+        /* 時間帯別背景：より落ち着いたトーンへ */
         body.day {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            /* 爽やかで透明感のある朝のスカイブルー */
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
         }
 
         body.evening {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            /* 穏やかで幻想的な夕暮れ（トワイライト） */
+            background: linear-gradient(135deg, #485563 0%, #29323c 100%);
         }
 
         body.night {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            /* 深い静寂を感じる濃紺とミッドナイトブルー */
+            background: linear-gradient(135deg, #09203f 0%, #537895 100%);
+        }
+
+        /* 背景をより美しく見せるための追加設定 */
+        body {
+            /* ...既存の設定... */
+            background-attachment: fixed;
+            background-size: cover;
+            /* ガラスカードとの対比を出すために、少し暗めに落とすオーバーレイ */
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            /* ほんの少し暗くして高級感を出す */
+            z-index: -1;
         }
 
         .glass-card {
