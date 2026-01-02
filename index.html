@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BREATH GUIDE | 集中・リラックスのための呼吸法ガイド</title>
+    <meta name="description" content="ピンクノイズとアニメーションでガイドする呼吸法アプリ。4-7-8呼吸法、ボックス呼吸、リラックス呼吸を、腹式呼吸のアドバイスと共に実践できます。">
+    <meta name="keywords" content="呼吸法, 4-7-8呼吸, ボックス呼吸, マインドフルネス, 集中力, リラックス, ピンクノイズ, 腹式呼吸">
+    
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --accent-color: #00f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            transition: background 2s ease;
+            overflow-x: hidden;
+            background: var(--bg-color);
+        }
+
+        /* 時間帯別背景 */
+        body.day { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        body.evening { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        body.night { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            margin-top: 40px;
+        }
+
+        h2 { letter-spacing: 4px; font-weight: 300; margin-bottom: 25px; }
+
+        .section-label { font-size: 0.7rem; opacity: 0.7; margin: 15px 0 8px; text-align: left; letter-spacing: 1px; }
+
+        .button-group { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
+
+        button {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 12px 5px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        button.active { background: rgba(255, 255, 255, 0.4); border-color: #fff; }
+
+        .circle-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 30px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #countdown-overlay {
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            font-weight: 200;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            z-index: 10;
+        }
+
+        .breath-circle {
+            width: 160px;
+            height: 160px;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            will-change: transform;
+        }
+
+        .phase-label { font-size: 1.2rem; font-weight: 300; letter-spacing: 2px; }
+        .timer { font-size: 2.5rem; font-weight: bold; }
+
+        #start-btn {
+            width: 100%;
+            background: white;
+            color: #1e3c72;
+            font-size: 1.2rem;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+        }
+
+        #start-btn.stop-style { background: #ff4b2b; color: white; }
+
+        .info-section {
+            width: 90%;
+            max-width: 400px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            text-align: left;
+        }
+
+        #technique-box {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background: rgba(0, 242, 254, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+        .pulse-animation { animation: pulse 1s infinite ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card">
+        <h2>BREATH GUIDE</h2>
+
+        <div class="section-label">MODE</div>
+        <div class="button-group">
+            <button id="focus-btn" onclick="selectMode('focus')">集中</button>
+            <button id="base-btn" onclick="selectMode('base')">基本</button>
+            <button id="relax-btn" onclick="selectMode('relax')">癒やし</button>
+        </div>
+
+        <div class="section-label">ROUNDS</div>
+        <div class="button-group">
+            <button id="r3" onclick="selectRounds(3)">3回</button>
+            <button id="r5" onclick="selectRounds(5)">5回</button>
+            <button id="r10" onclick="selectRounds(10)">10回</button>
+        </div>
+
+        <div class="circle-container">
+            <div id="countdown-overlay" style="display:none;"></div>
+            <div class="breath-circle" id="circle">
+                <div class="phase-label" id="phase">READY</div>
+                <div class="timer" id="time">0</div>
+            </div>
+        </div>
+
+        <div id="loop-count" style="font-size: 0.9rem; opacity: 0.8;">残り：-- 回</div>
+        <button id="start-btn" onclick="handleStart()">START</button>
+    </div>
+
+    <div class="info-section">
+        <div id="info-main">
+            <div id="info-text">モードを選択してください。</div>
+        </div>
+        <div id="technique-box">
+            <span class="tech-tag">TIPS: 腹式呼吸</span>
+            <p id="technique-text" style="font-size: 0.8rem; opacity: 0.8; margin: 0; line-height: 1.5;"></p>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx = null, currentTimer = null, countdownInterval = null;
+        let remainingLoops = 5, selectedData = null, isRunning = false;
+        let breathNode = null, gainNode = null;
+
+        function updateBackground() {
+            const hour = new Date().getHours();
+            const body = document.body;
+            body.classList.remove('day', 'evening', 'night');
+            if (hour >= 6 && hour < 16) body.classList.add('day');
+            else if (hour >= 16 && hour < 19) body.classList.add('evening');
+            else body.classList.add('night');
+        }
+
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+        function playBell(freq, vol = 0.1) {
+            initAudio(); if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            g.gain.setValueAtTime(vol, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.5);
+            osc.connect(g); g.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+        }
+
+        function createPinkNoiseBuffer() {
+            const bufferSize = 2 * audioCtx.sampleRate, buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate), output = buffer.getChannelData(0);
+            let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179; b1 = 0.99332 * b1 + white * 0.0750759; b2 = 0.96900 * b2 + white * 0.1538520;
+                b3 = 0.86650 * b3 + white * 0.3104856; b4 = 0.55000 * b4 + white * 0.5329522; b5 = -0.7616 * b5 - white * 0.0168980;
+                output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11; b6 = white * 0.115926;
+            }
+            return buffer;
+        }
+
+        function startBreathSound(isHigh, duration) {
+            initAudio(); stopBreathSound();
+            breathNode = audioCtx.createBufferSource(); breathNode.buffer = createPinkNoiseBuffer(); breathNode.loop = true;
+            const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = isHigh ? 1000 : 500;
+            gainNode = audioCtx.createGain(); const now = audioCtx.currentTime;
+            gainNode.gain.setValueAtTime(0, now);
+            if (isHigh) {
+                gainNode.gain.linearRampToValueAtTime(0.2, now + duration * 0.8); gainNode.gain.linearRampToValueAtTime(0, now + duration);
+            } else {
+                gainNode.gain.linearRampToValueAtTime(0.2, now + 0.5); gainNode.gain.linearRampToValueAtTime(0, now + duration);
+            }
+            breathNode.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination); breathNode.start();
+        }
+
+        function stopBreathSound() { if (breathNode) { try { const now = audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.linearRampToValueAtTime(0, now + 0.2); breathNode.stop(now + 0.3); } catch(e) {} breathNode = null; } }
+
+        const configs = {
+            focus: { phases: ['inhale', 'hold', 'exhale'], times: { inhale: 4, hold: 7, exhale: 8 }, desc: "<b>4-7-8呼吸法（集中・鎮静）</b>", tip: "吸うときにお腹を前に出し、吐くときは凹ませるのがコツです。" },
+            base: { phases: ['inhale', 'hold1', 'exhale', 'hold2'], times: { inhale: 4, hold1: 4, exhale: 4, hold2: 4 }, desc: "<b>ボックス呼吸法（基本）</b>", tip: "横隔膜を下げる意識で。肺の下の方まで空気を入れるイメージ。" },
+            relax: { phases: ['inhale', 'hold', 'exhale'], times: { inhale: 4, hold: 4, exhale: 8 }, desc: "<b>リラックス呼吸法（4-4-8）</b>", tip: "吐くときにお腹の力を抜き、体が椅子に沈み込む感覚を大切に。" }
+        };
+
+        function selectMode(key) {
+            if (isRunning) return;
+            selectedData = configs[key];
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(key + '-btn').classList.add('active');
+            document.getElementById('info-text').innerHTML = selectedData.desc;
+            document.getElementById('technique-text').innerText = selectedData.tip;
+            playBell(523, 0.05);
+        }
+
+        function selectRounds(n) {
+            if (isRunning) return;
+            remainingLoops = n;
+            document.getElementById('loop-count').innerText = `残り：${remainingLoops} 回`;
+            document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('r' + n).classList.add('active');
+            playBell(659, 0.05);
+        }
+
+        function resetSystem() {
+            if (currentTimer) clearInterval(currentTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
+            stopBreathSound(); isRunning = false;
+            const btn = document.getElementById('start-btn');
+            btn.innerText = "START"; btn.classList.remove('stop-style');
+            document.getElementById('phase').innerText = "READY"; document.getElementById('time').innerText = "0";
+            document.getElementById('time').style.opacity = "1";
+            const circle = document.getElementById('circle');
+            circle.style.transition = "transform 0.5s ease"; circle.style.transform = "scale(1)"; circle.classList.remove('pulse-animation');
+            document.getElementById('countdown-overlay').style.display = "none";
+        }
+
+        function handleStart() {
+            if (isRunning) { resetSystem(); return; }
+            if (!selectedData) { alert("モードを選択してください"); return; }
+            initAudio(); isRunning = true;
+            const btn = document.getElementById('start-btn');
+            btn.innerText = "STOP"; btn.classList.add('stop-style');
+
+            let count = 3;
+            const overlay = document.getElementById('countdown-overlay');
+            const timeText = document.getElementById('time');
+            overlay.style.display = "block"; overlay.innerText = count;
+            timeText.style.opacity = "0.2";
+            document.getElementById('phase').innerText = "PREPARE";
+            document.getElementById('circle').classList.add('pulse-animation');
+
+            countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) overlay.innerText = count;
+                else {
+                    clearInterval(countdownInterval); overlay.style.display = "none";
+                    timeText.style.opacity = "1";
+                    document.getElementById('circle').classList.remove('pulse-animation');
+                    startSession();
+                }
+            }, 1000);
+        }
+
+        function startSession() {
+            let phaseIdx = 0; let currentPhase = selectedData.phases[phaseIdx]; let timeLeft = selectedData.times[currentPhase];
+            const circle = document.getElementById('circle');
+            const updateUI = (phase, time) => {
+                document.getElementById('time').innerText = time;
+                document.getElementById('phase').innerText = (phase === 'inhale') ? "吸って" : (phase.startsWith('hold') ? "止めて" : "吐いて");
+                if (time === selectedData.times[phase]) {
+                    if (phase === 'inhale') {
+                        circle.style.transition = "none"; circle.style.transform = "scale(1)";
+                        requestAnimationFrame(() => { circle.style.transition = `transform ${selectedData.times[phase]}s ease-in-out`; circle.style.transform = "scale(1.2)"; });
+                        playBell(880, 0.05); startBreathSound(true, selectedData.times[phase]);
+                    } else if (phase.startsWith('hold')) {
+                        circle.style.transition = "none"; stopBreathSound(); playBell(440, 0.03);
+                    } else if (phase === 'exhale') {
+                        circle.style.transition = `transform ${selectedData.times[phase]}s ease-in-out`; circle.style.transform = "scale(1.0)";
+                        playBell(660, 0.05); startBreathSound(false, selectedData.times[phase]);
+                    }
+                }
+            };
+            updateUI(currentPhase, timeLeft);
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    phaseIdx++;
+                    if (phaseIdx >= selectedData.phases.length) {
+                        remainingLoops--; document.getElementById('loop-count').innerText = `残り：${remainingLoops} 回`;
+                        if (remainingLoops <= 0) { playBell(1046, 0.1); resetSystem(); document.getElementById('phase').innerText = "完了"; return; }
+                        phaseIdx = 0;
+                    }
+                    currentPhase = selectedData.phases[phaseIdx]; timeLeft = selectedData.times[currentPhase];
+                }
+                updateUI(currentPhase, timeLeft);
+            }, 1000);
+        }
+
+        window.addEventListener('load', () => { updateBackground(); selectMode('base'); selectRounds(5); });
+    </script>
+</body>
+</html>
