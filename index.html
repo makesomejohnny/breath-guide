@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<meta name="google-site-verification" content="TR8OxtfrZ4C85uZdT12t7aRYjkaJpFrukCaWB83UxeQ" />
 <html lang="ja">
+
 <head>
     <meta name="google-site-verification" content="TR8OxtfrZ4C85uZdT12t7aRYjkaJpFrukCaWB83UxeQ" />
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <title>BREATH GUIDE | 集中・リラックスのための呼吸法ガイド</title>
     <meta name="description" content="ピンクノイズとアニメーションでガイドする呼吸法アプリ。4-7-8呼吸法、ボックス呼吸、リラックス呼吸を、腹式呼吸のアドバイスと共に実践できます。">
     <meta name="keywords" content="呼吸法, 4-7-8呼吸, ボックス呼吸, マインドフルネス, 集中力, リラックス, ピンクノイズ, 腹式呼吸">
-    
+
     <style>
         :root {
             --bg-color: #1a1a2e;
@@ -31,9 +31,17 @@
         }
 
         /* 時間帯別背景 */
-        body.day { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        body.evening { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        body.night { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+        body.day {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        body.evening {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        body.night {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
 
         .glass-card {
             background: var(--glass-bg);
@@ -48,11 +56,26 @@
             margin-top: 40px;
         }
 
-        h2 { letter-spacing: 4px; font-weight: 300; margin-bottom: 25px; }
+        h2 {
+            letter-spacing: 4px;
+            font-weight: 300;
+            margin-bottom: 25px;
+        }
 
-        .section-label { font-size: 0.7rem; opacity: 0.7; margin: 15px 0 8px; text-align: left; letter-spacing: 1px; }
+        .section-label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin: 15px 0 8px;
+            text-align: left;
+            letter-spacing: 1px;
+        }
 
-        .button-group { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
+        .button-group {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
 
         button {
             flex: 1;
@@ -68,7 +91,10 @@
             white-space: nowrap;
         }
 
-        button.active { background: rgba(255, 255, 255, 0.4); border-color: #fff; }
+        button.active {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #fff;
+        }
 
         .circle-container {
             position: relative;
@@ -104,8 +130,16 @@
             will-change: transform;
         }
 
-        .phase-label { font-size: 1.2rem; font-weight: 300; letter-spacing: 2px; }
-        .timer { font-size: 2.5rem; font-weight: bold; }
+        .phase-label {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
 
         #start-btn {
             width: 100%;
@@ -117,7 +151,10 @@
             border: none;
         }
 
-        #start-btn.stop-style { background: #ff4b2b; color: white; }
+        #start-btn.stop-style {
+            background: #ff4b2b;
+            color: white;
+        }
 
         .info-section {
             width: 90%;
@@ -146,13 +183,28 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 0.5; }
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
         }
-        .pulse-animation { animation: pulse 1s infinite ease-in-out; }
+
+        .pulse-animation {
+            animation: pulse 1s infinite ease-in-out;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="glass-card">
@@ -222,7 +274,7 @@
 
         function createPinkNoiseBuffer() {
             const bufferSize = 2 * audioCtx.sampleRate, buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate), output = buffer.getChannelData(0);
-            let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
             for (let i = 0; i < bufferSize; i++) {
                 const white = Math.random() * 2 - 1;
                 b0 = 0.99886 * b0 + white * 0.0555179; b1 = 0.99332 * b1 + white * 0.0750759; b2 = 0.96900 * b2 + white * 0.1538520;
@@ -246,7 +298,7 @@
             breathNode.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination); breathNode.start();
         }
 
-        function stopBreathSound() { if (breathNode) { try { const now = audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.linearRampToValueAtTime(0, now + 0.2); breathNode.stop(now + 0.3); } catch(e) {} breathNode = null; } }
+        function stopBreathSound() { if (breathNode) { try { const now = audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.linearRampToValueAtTime(0, now + 0.2); breathNode.stop(now + 0.3); } catch (e) { } breathNode = null; } }
 
         const configs = {
             focus: { phases: ['inhale', 'hold', 'exhale'], times: { inhale: 4, hold: 7, exhale: 8 }, desc: "<b>4-7-8呼吸法（集中・鎮静）</b>", tip: "吸うときにお腹を前に出し、吐くときは凹ませるのがコツです。" },
@@ -257,8 +309,16 @@
         function selectMode(key) {
             if (isRunning) return;
             selectedData = configs[key];
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(key + '-btn').classList.add('active');
+
+            // モードボタンのグループ（1番目のgroup）からactiveを消す
+            const modeButtons = document.querySelectorAll('.button-group:nth-of-type(1) button');
+            modeButtons.forEach(btn => btn.classList.remove('active'));
+
+            // ID名に「-btn」がついているので注意（htmlのidと一致させる）
+            const targetId = key + '-btn';
+            const targetBtn = document.getElementById(targetId);
+            if (targetBtn) targetBtn.classList.add('active');
+
             document.getElementById('info-text').innerHTML = selectedData.desc;
             document.getElementById('technique-text').innerText = selectedData.tip;
             playBell(523, 0.05);
@@ -267,9 +327,16 @@
         function selectRounds(n) {
             if (isRunning) return;
             remainingLoops = n;
+
+            // ラウンドボタンのグループ（2番目のgroup）からactiveを消す
+            const roundButtons = document.querySelectorAll('.button-group:nth-of-type(2) button');
+            roundButtons.forEach(btn => btn.classList.remove('active'));
+
+            // 今押されたボタンにactiveをつける
+            const targetBtn = document.getElementById('r' + n);
+            if (targetBtn) targetBtn.classList.add('active');
+
             document.getElementById('loop-count').innerText = `残り：${remainingLoops} 回`;
-            document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('r' + n).classList.add('active');
             playBell(659, 0.05);
         }
 
@@ -353,4 +420,3 @@
 </body>
 
 </html>
-
