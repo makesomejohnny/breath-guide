@@ -323,17 +323,28 @@
         }
 
         function startBreathSound(isHigh, duration) {
-            initAudio(); stopBreathSound();
-            breathNode = audioCtx.createBufferSource(); breathNode.buffer = createPinkNoiseBuffer(); breathNode.loop = true;
-            const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = isHigh ? 1000 : 500;
-            gainNode = audioCtx.createGain(); const now = audioCtx.currentTime;
+            initAudio();
+            stopBreathSound();
+            breathNode = audioCtx.createBufferSource();
+            breathNode.buffer = createPinkNoiseBuffer();
+            breathNode.loop = true;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = isHigh ? 1000 : 500; // 吸うときは高め、吐くときは低め
+
+            gainNode = audioCtx.createGain();
+            const now = audioCtx.currentTime;
+
             gainNode.gain.setValueAtTime(0, now);
-            if (isHigh) {
-                gainNode.gain.linearRampToValueAtTime(0.2, now + duration * 0.8); gainNode.gain.linearRampToValueAtTime(0, now + duration);
-            } else {
-                gainNode.gain.linearRampToValueAtTime(0.2, now + 0.5); gainNode.gain.linearRampToValueAtTime(0, now + duration);
-            }
-            breathNode.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination); breathNode.start();
+            // duration（秒数）いっぱいまで鳴るように調整
+            gainNode.gain.linearRampToValueAtTime(0.2, now + 0.5);
+            gainNode.gain.linearRampToValueAtTime(0, now + duration - 0.1);
+
+            breathNode.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            breathNode.start();
         }
 
         function stopBreathSound() { if (breathNode) { try { const now = audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.linearRampToValueAtTime(0, now + 0.2); breathNode.stop(now + 0.3); } catch (e) { } breathNode = null; } }
